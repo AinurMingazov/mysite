@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+Инструкция по настройке проекта django на Ubuntu 18.04 Nginx и Gunicorn + Postgres
+<p>
+Содержание: <br><br>
+    0. Версии приложений<br>
+    1. Настройка droplet на digitalocean<br>
+    2. Настройка проекта django. Подготовка команд для ввода<br>
+    3. Настройка на сервере<br>
+    4. Ссылки на источники<br><br>
+
+   0. Версии приложений<br>
+Из requirements.txt:<br>
+asgiref==3.4.1<br>
+Django==4.0<br>
+sqlparse==0.4.2<br>
+tzdata==2021.5<br><br>
+
+На сервере: <br>
+Ubuntu<br>
+Nginx<br>
+Gunicorn<br>
+Postgres<br><br>
+
+1. Настройка droplet на digitalocean<br>
+Требуется регистрация на сайте https://www.digitalocean.com/, например через профиль на Github.<br>
+    Create/Droplets<br>(Можете выбирать по своим предпочтениям и требованиям. Напишу для примера)<br><br>
+    Выбираем:<br>
+    Ubuntu 21.10 x64<br>
+    Basic<br>
+    Regular Intel with SSD<br>
+    $5/mo<br>
+    Frankfurt<br>
+    Authentication - Password <br>
+    Create root password - вводим свожный пароль и записываем в блокнот<br>
+    Choose a hostname - стандартное заменяем на более короткое и подходящее<br>
+    Create Droplet<br>
+    Ждем менее минуты создания droplet.<br>
+    Копируем IP в виде 000.000.000.000 в блокнот, он нам пригодится в дальнейшем.<br><br>
+
+2. Настройка проекта django<br> Создаем копию файла settings.py - local_settings.py.
+    <br><br>
+
+    Открываем settings.py<br><br>
+
+    добавляем:<br>
+
+import os<br><br>
+заменяем <br>
+    BASE_DIR = Path(__file__).resolve().parent.parent<br>
+    на<br>
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))<br><br>
+Создаем файл /example/secret_file.txt. Копируем туда наш ключ, например: SECRET_KEY = 'django-insecure-j=3s&a9*(s)-ex$z0s1o&)xeosea8k8#-tpl29ybc6wq$%zz!3'<br>
+    и заменяем на SECRET_KEY = os.environ.get("SECRET_KEY", None)<br><br>
+
+    меняем DEBUG = True на DEBUG = False<br><br>
+
+    В ALLOWED_HOSTS = [] пропиcываем наш IP или домен и localhost например<br>
+    ALLOWED_HOSTS = ['000.000.000.000', 'localhost']<br><br>
+    Меняем настройки базы данных с sqlite на Postgres<br>
+    Вводим для БД имя, юзер и в файле secret_file.txt добавляем пароль, например:
+    DJANGO_DB_PASSWORD="superhardpassword1234567"<br><br>
+
+DATABASES = {<br>
+    'default': {<br>
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',<br>
+        'NAME': 'djangodb',<br>
+        'USER': 'django',<br>
+        'PASSWORD': os.environ.get("DJANGO_DB_PASSWORD", None),<br>
+        'HOST': 'localhost',<br>
+        'PORT': '5432',<br>
+    }<br>
+}<br>
+<br><br>
+Ниже STATIC_URL = 'static/' добавляем STATIC_ROOT = os.path.join(BASE_DIR, 'static/')<br><br>
+Вот и всё остальное делаю для удобства<br>
+создаем /example/setup.txt и внесем туда код, который нужно вводить при настройке Nginx и Gunicorn.
+Внесем данные которые уже известны IP, названия файлов и директорий и также пользователя,
+которого планируем создать. Назовем его ivan. <br><br>
+
+gunicorn.socket<br>
+[Unit]<br>
+Description=gunicorn socket<br>
+
+[Socket]<br>
+ListenStream=/run/gunicorn.sock<br>
+
+[Install]<br>
+WantedBy=sockets.target<br><br>
+
+#gunicorn.service<br><br>
+
+[Unit]<br>
+Description=gunicorn daemon<br>
+Requires=gunicorn.socket<br>
+After=network.target<br><br>
+
+[Service]<br>
+User=ivan<br>
+Group=ivan<br>
+EnvironmentFile=/home/ivan/mysite/env<br>
+WorkingDirectory=/home/ivan/mysite<br>
+ExecStart=/home/ivan/env/bin/gunicorn \<br>
+          --access-logfile - \<br>
+          --workers 3 \<br>
+          --bind unix:/run/gunicorn.sock \<br>
+          example.wsgi:application<br><br>
+
+[Install]<br>
+WantedBy=multi-user.target<br><br>
+
+nginx for mysite<br><br>
+
+server {<br>
+    listen 80;<br>
+    server_name 64.227.126.18;<br><br>
+
+    location = /favicon.ico { access_log off; log_not_found off; }<br>
+    location /static/ {<br>
+        root /home/ivan/mysite;<br>
+    }<br><br>
+
+    location / {<br>
+        include proxy_params;<br>
+        proxy_pass http://unix:/run/gunicorn.sock;<br>
+    }<br>
+}<br><br>
+
+Вносим local_settings.py, secret_file.txt и setup.txt в файл .gitignore    <br>
+Делаем commit и push проекта на github<br><br>
+
+3. Настройка на сервере<br><br>
+Открываем командную строку и вводим ssh root@наш_IP, например root@64.227.126.18 yes, вводим пароль.<br>
+    Вводим команды<br>
+
+
+
+
+
+<br>
+
+</body>
+</html>
