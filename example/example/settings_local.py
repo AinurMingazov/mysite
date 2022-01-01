@@ -13,21 +13,20 @@ import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-
-SECRET_KEY = 'dofbopdbfoodfvjadlnvpbqouer9385-92hg2bv08qvq0rbvq0q-=30hg8ivb'
+SECRET_KEY = 'django-insecure-j=3s&a9*(s)-ex$z0s1o&)xeosea8k8#-tpl29ybc6wq$%zz!3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
+ALLOWED_HOSTS = []
 
-ALLOWED_HOSTS = ['64.227.126.18', 'localehost']
 
 # Application definition
 
@@ -76,20 +75,12 @@ WSGI_APPLICATION = 'example.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'djangodb',
-        'USER': 'django',
-        'PASSWORD': 'superhardpassword1234567',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-
-
 
 
 # Password validation
@@ -127,7 +118,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

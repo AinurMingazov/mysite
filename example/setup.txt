@@ -1,0 +1,49 @@
+#gunicorn.socket
+
+[Unit]
+Description=gunicorn socket
+
+[Socket]
+ListenStream=/run/gunicorn.sock
+
+[Install]
+WantedBy=sockets.target
+
+
+#gunicorn.service
+
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=ivan
+Group=ivan
+EnvironmentFile=/home/ivan/mysite/example/env
+WorkingDirectory=/home/ivan/mysite
+ExecStart=/home/ivan/env/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/run/gunicorn.sock \
+          mysite.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+
+nginx for mysite<br>
+
+server {
+    listen 80;
+    server_name 64.227.126.18;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /home/ivan/mysite;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/run/gunicorn.sock;
+    }
+}

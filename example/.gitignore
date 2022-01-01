@@ -6,9 +6,9 @@
 # JetBrains IDE
 .idea/
 
-setup.txt
-secret_file.txt
-settings_local.py
+#setup.txt
+#secret_file.txt
+#settings_local.py
 
 django/*
 **.sqlite3*
