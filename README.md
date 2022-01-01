@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     </head>
 <body>
+   <h2> Более удобный вид инструкции в файле index.html. <br>
+       Скачайте и откройте его в браузере.  </h2>
+      <hr>  
+    <p><hr>  
+    <p><hr>  
+    
+    
+    
+    
+    
+    
 <h1>Инструкция по настройке проекта django на Ubuntu 21.10 Nginx и Gunicorn + Postgres</h1>
 <p>
 <h2>Содержание: </h2>
