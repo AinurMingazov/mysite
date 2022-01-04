@@ -172,6 +172,8 @@ GRANT ALL PRIVILEGES ON DATABASE djangodb TO django;<br>
 cd /home/ivan<br>
 git clone https://github.com/MGZV/mysite.git</code></h7><br><br>
 
+
+
 <li>Ставим виртуальное окружение:<br><br>
 <h7><code>sudo -H pip3 install --upgrade pip<br>
 sudo -H pip3 install virtualenv<br>
@@ -183,6 +185,10 @@ source env/bin/activate</code></h7><br><br>
 mv example/* ..<br>
 cd ..<br>
 rm -rf example/</code></h7><br><br>
+
+<li>Перезаписываем в файле <code>settings.py SECRET_KEY</code> и <code>'PASSWORD'</code> в БД.
+    Копируем пароли с файла <code>secret_file.txt</code><br><br>
+<h7><code>sudo vim /home/ivan/mysite/example/settings.py</code></h7><br><br>
 
 <li>Устанавливаем пакеты:<br><br>
 <h7><code>pip install -r requirements.txt<br>
