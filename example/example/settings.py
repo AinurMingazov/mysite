@@ -20,14 +20,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-
-SECRET_KEY = 'dofbopdbfoodfvjadlnvpbqouer9385-92hg2bv08qvq0rbvq0q-=30hg8ivb'
+SECRET_KEY = 'vieurvuie734fosnobvusobvnoskmvlksfvba8k8#-tpl29ybc6wq$%zz!3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+ALLOWED_HOSTS = ['134.209.244.233', 'localhost']
 
-ALLOWED_HOSTS = ['64.227.126.18', 'localehost']
 
 # Application definition
 
@@ -76,7 +75,6 @@ WSGI_APPLICATION = 'example.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -87,9 +85,6 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
-
-
 
 
 # Password validation
@@ -128,7 +123,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
